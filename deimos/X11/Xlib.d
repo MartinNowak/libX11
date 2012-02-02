@@ -1,7 +1,7 @@
 module deimos.X11.Xlib;
 import core.stdc.config;
 import std.c.stdarg;
-import deimos.X11.X;
+public import deimos.X11.X;
 
 extern( System  ){
 const int XlibSpecificationRelease  = 6;
@@ -494,7 +494,7 @@ struct XMotionEvent{
     int x, y;                                           /* pointer x, y coordinates in event window                     */
     int x_root, y_root;                                 /* coordinates relative to root                                 */
     uint state;                                         /* key or button mask                                           */
-    char is_hint;                                       /* detail                                                       */
+    ubyte is_hint;                                      /* detail                                                       */
     Bool same_screen;                                   /* same screen flag                                             */
 }
 alias XMotionEvent XPointerMovedEvent;
@@ -548,7 +548,7 @@ struct XKeymapEvent{
     Bool send_event;                                    /* true if this came from a SendEvent request                   */
     Display* display;                                   /* Display the event was read from                              */
     Window window;
-    char key_vector[32];
+    ubyte key_vector[32];
 }
 
 struct XExposeEvent{
@@ -790,11 +790,12 @@ struct XClientMessageEvent{
     Window window;
     Atom message_type;
     int format;
-    union data  {
-                    char b[20];
-                    short s[10];
-                    c_long l[5];
-                }
+    union Data {
+                    byte    b[20];
+                    short   s[10];
+                    c_long  l[5];
+                };
+    Data data;
 }
 
 struct XMappingEvent{
@@ -1415,7 +1416,7 @@ extern int function(
 );
 extern Atom XInternAtom(
     Display*                                            /* display                                                      */,
-    char*                                               /* atom_name                                                    */,
+    const char*                                         /* atom_name                                                    */,
     Bool                                                /* only_if_exists                                               */
 );
 extern Status XInternAtoms(
@@ -1507,7 +1508,7 @@ extern Window XCreateSimpleWindow(
     uint                                                /* height                                                       */,
     uint                                                /* border_width                                                 */,
     c_ulong                                             /* border                                                       */,
-    uint                                                /* background                                                   */
+    c_ulong                                             /* background                                                   */
 );
 extern Window XGetSelectionOwner(
     Display*                                            /* display                                                      */,
@@ -3262,7 +3263,7 @@ extern int XStoreColors(
 extern int XStoreName(
     Display*                                            /* display                                                      */,
     Window                                              /* w                                                            */,
-    char*                                               /* window_name                                                  */
+    const char*                                         /* window_name                                                  */
 );
 
 extern int XStoreNamedColor(
